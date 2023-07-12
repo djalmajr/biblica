@@ -1,0 +1,13 @@
+.main__container {
+  padding: 16px;
+}
+
+.main__spin_wrapper {
+  display: flex;
+  position: absolute;
+  inset: 0;
+}
+
+.main__spin {
+  margin: auto;
+}

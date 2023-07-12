@@ -1,0 +1,22 @@
+{
+  "name": "crossbible",
+  "version": "0.0.1",
+  "description": "Bible cross-reference",
+  "main": "app/index.js",
+  "author": "djalmajr@gmail.com",
+  "license": "ISC",
+  "homepage": "https://github.com/djalmajr/crossbible#readme",
+  "keywords": [
+    "bible"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/djalmajr/crossbible.git"
+  },
+  "bugs": {
+    "url": "https://github.com/djalmajr/crossbible/issues"
+  },
+  "scripts": {
+    "serve": "npx -y live-server . --port=3000 --no-browser"
+  }
+}
