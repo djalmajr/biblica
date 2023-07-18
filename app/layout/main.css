@@ -1,13 +1,17 @@
-.main__container {
+[data-main] {
   padding: 16px;
 }
 
-.main__spin_wrapper {
+[data-main].loading {
   display: flex;
   position: absolute;
   inset: 0;
 }
 
-.main__spin {
+[data-main] .spin {
   margin: auto;
+}
+
+[data-main] .counter {
+  margin: 0 1rem;
 }
