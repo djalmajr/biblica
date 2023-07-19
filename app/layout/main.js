@@ -1,6 +1,6 @@
-import { Button, Spin } from "antd";
+import { Input, Space, Button, Spin } from "antd";
 import { html } from "htm/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import initSqlJs from "sql.js";
 import css from "./main.css" assert { type: "css" };
 
@@ -9,8 +9,7 @@ document.adoptedStyleSheets = [...document.adoptedStyleSheets, css];
 const queries = {
   books: "SELECT * FROM books",
   chapters: `SELECT book_number, COUNT(DISTINCT chapter) as num_chapters FROM verses GROUP BY book_number`,
-  verses: (book, chapter) =>
-    `select * from verses where book_number = ${book} and chapter = ${chapter}`,
+  verses: (book, chapter) => `select * from verses where book_number = ${book} and chapter = ${chapter}`,
 };
 
 const getDBData = ([{ columns, values }]) => {
@@ -23,12 +22,12 @@ export function Main() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState([]);
   const [verses, setVerses] = useState([]);
-  const [counter, setCounter] = useState(0);
+  const inputRef = useRef();
 
   useEffect(() => {
     initSqlJs({ locateFile: (file) => `https://sql.js.org/dist/${file}` }).then((SQL) => {
       const xhr = new XMLHttpRequest();
-      xhr.open("GET", "/assets/bibles/ACF2011.SQLite3", true);
+      xhr.open("GET", "/assets/bibles/NVT.SQLite3", true);
       xhr.responseType = "arraybuffer";
       xhr.onload = () => setDB(new SQL.Database(new Uint8Array(xhr.response)));
       xhr.send();
@@ -75,12 +74,29 @@ export function Main() {
     `;
   }
 
+  const handleSearch = () => {
+    const query = inputRef.current.input.value.trim();
+
+    if (query) {
+      const [book, refs] = query.split(/\s+/);
+      const [chapter, verses] = refs.split(/[.:]/);
+      const bookNumber = books.find(b => {
+        const bb = book.toLowerCase();
+        return b.short_name.toLowerCase() === (bb === "ex" ? "êx" : bb);
+      })?.book_number;
+
+      console.log(`book: ${bookNumber}, chapter: ${chapter}, verses: ${verses}`);
+    }
+  };
+
   return html`
     <div data-main>
-      <h1 className="title">CrossBible</h1>
-      <${Button} onClick=${() => setCounter((s) => s + 1)}>+<//>
-      <span className="counter">${counter}</span>
-      <${Button} onClick=${() => setCounter((s) => s - 1)}>-<//>
+      <${Space} direction="vertical">
+        <${Space}>
+          <${Input} ref=${inputRef} placeholder="Digite a referência bíblica" />
+          <${Button} onClick=${handleSearch}>Buscar<//>
+        <//>
+      <//>
     </div>
   `;
 }
